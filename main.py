@@ -10,7 +10,7 @@ app = FastAPI()
 
 origins = [
     "http://localhost:8000",  # desenvolvimento
-    "https://calcip-bn6s2x.flutterflow.app/",  # front-end
+    "https://calcip-bn6s2x.flutterflow.app",  # front-end
 ]
 
 # Adiciona o middleware CORS
