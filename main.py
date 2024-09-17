@@ -8,20 +8,17 @@ from ipv4binary import calculate_ipv4_binary
 
 app = FastAPI()
 
-# Defina as origens permitidas. 
-# Exemplo: você pode permitir todas as origens com ["*"], ou definir domínios específicos.
 origins = [
-    "http://localhost:8000",  # Origem local para desenvolvimento
-    "https://calcip-bn6s2x.flutterflow.app/",  # Substitua pelo domínio do seu front-end
-    # Adicione mais origens conforme necessário
+    "http://localhost:8000",  # desenvolvimento
+    "https://calcip-bn6s2x.flutterflow.app/",  # front-end
 ]
 
 # Adiciona o middleware CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,  # Domínios que podem acessar a API
-    allow_credentials=True,  # Permitir envio de cookies e credenciais
-    allow_methods=["*"],  # Permitir todos os métodos HTTP (GET, POST, etc.)
+    allow_credentials=True, # Permitir envio de cookies e credenciais
+    allow_methods=["POST"],  # Permitir todos os métodos HTTP (GET, POST, etc.)
     allow_headers=["*"],  # Permitir todos os cabeçalhos HTTP
 )
 
