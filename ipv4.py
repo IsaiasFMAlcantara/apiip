@@ -20,6 +20,8 @@ def calculate_ipv4(ip, subnet):
         "IP Address": ip,
         "Network Address": str(ip_network.network_address),
         "Usable Host IP Range": f"{first_host} - {last_host}",
+        "First Host":first_host,
+        "Last Host": last_host,
         "Broadcast Address": str(ip_network.broadcast_address),
         "Total Number of Hosts": ip_network.num_addresses,
         "Number of Usable Hosts": ip_network.num_addresses - 2,
