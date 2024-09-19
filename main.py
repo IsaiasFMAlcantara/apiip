@@ -35,14 +35,14 @@ class IPv4Request(BaseModel):
                 raise HTTPException(
                     status_code=400,  # Erro específico para o IP
                     detail={
-                        "mensagem": "O IP deve ser um endereço IPv4 válido"
+                        "mensagem": "O IP deve ser um endereço IPv4 valido"
                     }
                 )
         except ValueError:
             raise HTTPException(
                 status_code=400,  # Erro de IP inválido
                 detail={
-                    "mensagem": "Endereço IP inválido"
+                    "mensagem": "Endereco IP invalido"
                 }
             )
         return v
@@ -55,14 +55,14 @@ class IPv4Request(BaseModel):
                 raise HTTPException(
                     status_code=406,  # Erro específico para a máscara de sub-rede
                     detail={
-                        "mensagem": "A máscara de sub-rede deve estar entre 0 e 32"
+                        "mensagem": "A mascara de sub-rede deve estar entre 0 e 32"
                     }
                 )
         except ValueError:
             raise HTTPException(
                 status_code=406,  # Erro específico para a máscara de sub-rede
                 detail={
-                    "mensagem": "A máscara de sub-rede deve ser um número inteiro entre 0 e 32"
+                    "mensagem": "A marcara de sub-rede deve ser um número inteiro entre 0 e 32"
                 }
             )
         return v
@@ -98,7 +98,7 @@ def func_calcular_ipv4(request: IPv4Request):
         raise HTTPException(
             status_code=500,  # Retorna 500 para erro interno do servidor
             detail={
-                "mensagem": "Erro interno do servidor",
+                "mensagem": "Erro interno do servidor, tente novamente mais tarde",
                 "detalhes": str(e)
             }
         )
