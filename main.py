@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, validator
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
-from ipaddress import ip_address, IPv4Network
+from ipaddress import ip_address
 from ipv4 import calculate_ipv4
 
 app = FastAPI()
