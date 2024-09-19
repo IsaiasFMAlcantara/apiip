@@ -103,7 +103,7 @@ def func_calcular_ipv4(request: IPv4Request):
             }
         )
     return {
-        "mensagem": "Cálculo realizado com sucesso",
+        "mensagem": "Calculo realizado com sucesso",
         "resultado": result
     }
 
