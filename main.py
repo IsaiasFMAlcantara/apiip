@@ -62,7 +62,7 @@ class IPv4Request(BaseModel):
             raise HTTPException(
                 status_code=406,  # Erro específico para a máscara de sub-rede
                 detail={
-                    "mensagem": "A marcara de sub-rede deve ser um número inteiro entre 0 e 32"
+                    "mensagem": "A marcara de sub-rede deve ser um numero inteiro entre 0 e 32"
                 }
             )
         return v
