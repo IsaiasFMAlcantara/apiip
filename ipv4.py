@@ -1,5 +1,17 @@
 import ipaddress
-from ipv4binary import get_ip_class
+
+def get_ip_class(ip):
+    first_octet = int(ip.split('.')[0])
+    if 1 <= first_octet <= 126:
+        return 'A'
+    elif 128 <= first_octet <= 191:
+        return 'B'
+    elif 192 <= first_octet <= 223:
+        return 'C'
+    elif 224 <= first_octet <= 239:
+        return 'D'
+    else:
+        return 'E'
 
 def calculate_ipv4(ip: str, subnet: str) -> dict:
     ip_network = ipaddress.IPv4Network(f"{ip}/{subnet}", strict=False)
