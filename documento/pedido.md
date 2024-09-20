@@ -12,7 +12,8 @@ Bory da API
 }
 ```
 
-
+Link da API Swagger
+>https://api-ip.onrender.com/docs
 
 Pergunta
 ```txt
