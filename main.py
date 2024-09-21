@@ -1,111 +1,54 @@
 import os
 import uvicorn
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, validator
-from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
-from ipaddress import ip_address
-from ipv4 import calculate_ipv4
+from models import IPv4Request  # Importa o modelo de requisição
+from services import calculate_ipv4  # Importa a lógica de cálculo de IPv4
+from exceptions import validation_exception_handler, custom_http_exception_handler  # Manipuladores de exceção
 
+# Inicializa a aplicação FastAPI
 app = FastAPI()
 
+# Define as origens permitidas para o CORS (Cross-Origin Resource Sharing)
 origins = [
-    "http://localhost:8000",
-    "https://calcip-bn6s2x.flutterflow.app",
+    "http://localhost:8000",  # Permite chamadas do localhost
+    "https://calcip-bn6s2x.flutterflow.app",  # Permite chamadas do aplicativo FlutterFlow
 ]
 
+# Configura o middleware CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["POST"],
-    allow_headers=["*"],
+    allow_origins=origins,  # Permite apenas as origens definidas
+    allow_credentials=True,  # Permite o uso de cookies e credenciais
+    allow_methods=["POST"],  # Permite apenas o método POST
+    allow_headers=["*"],  # Permite todos os cabeçalhos
 )
 
-class IPv4Request(BaseModel):
-    ip: str
-    subnet: str
+# Define manipuladores de exceção personalizados para a aplicação
+app.exception_handler(RequestValidationError)(validation_exception_handler)
+app.exception_handler(HTTPException)(custom_http_exception_handler)
 
-    @validator('ip')
-    def validate_ip(cls, v):
-        try:
-            ip_obj = ip_address(v)
-            if ip_obj.version != 4:
-                raise HTTPException(
-                    status_code=400,  # Erro específico para o IP
-                    detail={
-                        "mensagem": "O IP deve ser um endereço IPv4 valido"
-                    }
-                )
-        except ValueError:
-            raise HTTPException(
-                status_code=400,  # Erro de IP inválido
-                detail={
-                    "mensagem": "Endereco IP invalido"
-                }
-            )
-        return v
-
-    @validator('subnet')
-    def validate_subnet(cls, v):
-        try:
-            subnet = int(v)
-            if not (0 <= subnet <= 32):
-                raise HTTPException(
-                    status_code=406,  # Erro específico para a máscara de sub-rede
-                    detail={
-                        "mensagem": "A mascara de sub-rede deve estar entre 0 e 32"
-                    }
-                )
-        except ValueError:
-            raise HTTPException(
-                status_code=406,  # Erro específico para a máscara de sub-rede
-                detail={
-                    "mensagem": "A marcara de sub-rede deve ser um numero inteiro entre 0 e 32"
-                }
-            )
-        return v
-
-@app.exception_handler(RequestValidationError)
-async def validation_exception_handler(request, exc):
-    errors = exc.errors()
-    formatted_errors = [{"loc": error["loc"], "msg": error["msg"], "type": error["type"]} for error in errors]
-    return JSONResponse(
-        status_code=422,
-        content={
-            "mensagem": "Erro de validação nos dados fornecidos",
-            "detalhes": formatted_errors
-        },
-    )
-
-@app.exception_handler(HTTPException)
-async def custom_http_exception_handler(request, exc):
-    return JSONResponse(
-        status_code=exc.status_code,
-        content={
-            "mensagem": exc.detail["mensagem"]
-        },
-    )
-
+# Endpoint para calcular o IPv4
 @app.post("/calcular_ipv4")
 def func_calcular_ipv4(request: IPv4Request):
+    # Tenta executar a função de cálculo do IPv4
     try:
         result = calculate_ipv4(ip=request.ip, subnet=request.subnet)
     except HTTPException as e:
-        raise e
+        raise e  # Lança exceções específicas para erros de IP e máscara
     except Exception as e:
+        # Trata erros internos do servidor
         raise HTTPException(
-            status_code=500,  # Retorna 500 para erro interno do servidor
+            status_code=500,
             detail={
                 "mensagem": "Erro interno do servidor, tente novamente mais tarde",
                 "detalhes": str(e)
             }
         )
-    return {
-        "mensagem": "Calculo realizado com sucesso",
-        "resultado": result
-    }
+    # Retorna a mensagem de sucesso e o resultado do cálculo
+    return {"mensagem": "Cálculo realizado com sucesso", "resultado": result}
 
+# Inicializa o servidor Uvicorn, usando o valor da variável PORT ou 8000 por padrão
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=int(os.getenv("PORT", 8000)))

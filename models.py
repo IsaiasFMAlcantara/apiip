@@ -1,0 +1,44 @@
+from pydantic import BaseModel, validator
+from fastapi import HTTPException
+from ipaddress import ip_address
+
+# Define o modelo de requisição para o cálculo de IPv4
+class IPv4Request(BaseModel):
+    ip: str  # Campo para o endereço IP
+    subnet: str  # Campo para a máscara de sub-rede
+
+    # Validador para o campo de IP
+    @validator('ip')
+    def validate_ip(cls, v):
+        try:
+            ip_obj = ip_address(v)  # Converte o valor de IP para um objeto de endereço IP
+            if ip_obj.version != 4:  # Verifica se é um endereço IPv4
+                raise HTTPException(
+                    status_code=400,
+                    detail={"mensagem": "O IP deve ser um endereço IPv4 válido"}
+                )
+        except ValueError:
+            # Lança exceção se o IP for inválido
+            raise HTTPException(
+                status_code=400,
+                detail={"mensagem": "Endereço IP inválido"}
+            )
+        return v
+
+    # Validador para o campo de sub-rede
+    @validator('subnet')
+    def validate_subnet(cls, v):
+        try:
+            subnet = int(v)  # Converte a sub-rede para inteiro
+            if not (0 <= subnet <= 32):  # Verifica se está entre 0 e 32
+                raise HTTPException(
+                    status_code=406,
+                    detail={"mensagem": "A máscara de sub-rede deve estar entre 0 e 32"}
+                )
+        except ValueError:
+            # Lança exceção se a sub-rede for inválida
+            raise HTTPException(
+                status_code=406,
+                detail={"mensagem": "A máscara de sub-rede deve ser um número inteiro entre 0 e 32"}
+            )
+        return v
