@@ -53,3 +53,24 @@ def calculate_ipv4(ip: str, subnet: str) -> dict:
 
     except ValueError as e:
         return {"error": str(e)}  # Retorna um erro se houver uma exceção de valor
+
+
+def valida_imc(genero: str, imc: float) -> str:
+    faixas = {
+        'H': [(20, 'Abaixo do normal'), (24.99, 'Normal'), (29.99, 'Obesidade leve'), (39.99, 'Obesidade Moderada'),
+              (float('inf'), 'Obesidade Mórbida')],
+        'M': [(19, 'Abaixo do normal'), (23.90, 'Normal'), (28.99, 'Obesidade leve'), (38.99, 'Obesidade Moderada'),
+              (float('inf'), 'Obesidade Mórbida')]
+    }
+
+    for limite, classificacao in faixas[genero]:
+        if imc <= limite:
+            return classificacao
+
+
+def calcular_imc(genero: str, peso: float, altura: float) -> dict:
+    imc = round(peso / (altura ** 2), 2)
+    return {
+        'imc': imc,
+        'classificacao': valida_imc(genero, imc)
+    }

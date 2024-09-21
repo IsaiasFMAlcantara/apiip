@@ -3,8 +3,8 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from models import IPv4Request  # Importa o modelo de requisição
-from services import calculate_ipv4  # Importa a lógica de cálculo de IPv4
+from models import IPv4Request, CalcIMC  # Importa o modelo de requisição
+from services import calculate_ipv4,calcular_imc  # Importa a lógica de cálculo de IPv4
 from exceptions import validation_exception_handler, custom_http_exception_handler  # Manipuladores de exceção
 
 # Inicializa a aplicação FastAPI
@@ -48,6 +48,26 @@ def func_calcular_ipv4(request: IPv4Request):
         )
     # Retorna a mensagem de sucesso e o resultado do cálculo
     return {"mensagem": "Calculo realizado com sucesso", "resultado": result}
+
+@app.post("/calcular_imc")
+def func_calcular_imc(request: CalcIMC):
+
+    try:
+        resultado = calcular_imc(genero=request.genero,peso=request.peso,altura=request.altura)
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "mensagem": "Erro interno do servidor, tente novamente mais tarde",
+                "detalhes": str(e)
+            }
+        )
+    return {
+        'mensagem':'Calculo realizado com sucesso',
+        'resultado':resultado
+    }
 
 # Inicializa o servidor Uvicorn, usando o valor da variável PORT ou 8000 por padrão
 if __name__ == "__main__":

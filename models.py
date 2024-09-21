@@ -42,3 +42,28 @@ class IPv4Request(BaseModel):
                 detail={"mensagem": "A mascara de sub-rede deve ser um numero inteiro entre 0 e 32"}
             )
         return v
+
+
+
+class CalcIMC(BaseModel):
+    peso: float
+    genero: str
+    altura: float
+
+    @validator('genero')
+    def validar_genero(cls, genero):
+        if genero not in ['H', 'M']:
+            raise ValueError('O gênero deve ser H (Homem) ou M (Mulher).')
+        return genero
+
+    @validator('peso')
+    def validar_peso(cls, peso):
+        if peso <= 0:
+            raise ValueError('O peso deve ser um número maior que 0.')
+        return peso
+
+    @validator('altura')
+    def validar_altura(cls, altura):
+        if altura <= 0:
+            raise ValueError('A altura deve ser um número maior que 0.')
+        return altura
