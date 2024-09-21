@@ -47,7 +47,7 @@ def func_calcular_ipv4(request: IPv4Request):
             }
         )
     # Retorna a mensagem de sucesso e o resultado do cálculo
-    return {"mensagem": "Cálculo realizado com sucesso", "resultado": result}
+    return {"mensagem": "Calculo realizado com sucesso", "resultado": result}
 
 # Inicializa o servidor Uvicorn, usando o valor da variável PORT ou 8000 por padrão
 if __name__ == "__main__":

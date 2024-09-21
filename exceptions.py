@@ -10,7 +10,7 @@ async def validation_exception_handler(request, exc: RequestValidationError):
     return JSONResponse(
         status_code=422,
         content={
-            "mensagem": "Erro de validação nos dados fornecidos",
+            "mensagem": "Erro de validacao nos dados fornecidos",
             "detalhes": formatted_errors
         },
     )

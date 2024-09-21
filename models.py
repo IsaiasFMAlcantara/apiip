@@ -15,13 +15,13 @@ class IPv4Request(BaseModel):
             if ip_obj.version != 4:  # Verifica se é um endereço IPv4
                 raise HTTPException(
                     status_code=400,
-                    detail={"mensagem": "O IP deve ser um endereço IPv4 válido"}
+                    detail={"mensagem": "O IP deve ser um endereco IPv4 valido"}
                 )
         except ValueError:
             # Lança exceção se o IP for inválido
             raise HTTPException(
                 status_code=400,
-                detail={"mensagem": "Endereço IP inválido"}
+                detail={"mensagem": "Endereco IP invalido"}
             )
         return v
 
@@ -33,12 +33,12 @@ class IPv4Request(BaseModel):
             if not (0 <= subnet <= 32):  # Verifica se está entre 0 e 32
                 raise HTTPException(
                     status_code=406,
-                    detail={"mensagem": "A máscara de sub-rede deve estar entre 0 e 32"}
+                    detail={"mensagem": "A mascara de sub-rede deve estar entre 0 e 32"}
                 )
         except ValueError:
             # Lança exceção se a sub-rede for inválida
             raise HTTPException(
                 status_code=406,
-                detail={"mensagem": "A máscara de sub-rede deve ser um número inteiro entre 0 e 32"}
+                detail={"mensagem": "A mascara de sub-rede deve ser um numero inteiro entre 0 e 32"}
             )
         return v
