@@ -14,6 +14,7 @@ app = FastAPI()
 origins = [
     "http://localhost:8000",  # Permite chamadas do localhost
     "https://calcip-bn6s2x.flutterflow.app",  # Permite chamadas do aplicativo FlutterFlow
+    "https://teste-53pnl4.flutterflow.app"
 ]
 
 # Configura o middleware CORS
