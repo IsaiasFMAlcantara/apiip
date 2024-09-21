@@ -46,9 +46,9 @@ class IPv4Request(BaseModel):
 
 
 class CalcIMC(BaseModel):
-    peso: float
+    peso: str
     genero: str
-    altura: float
+    altura: str
 
     @validator('genero')
     def validar_genero(cls, genero):
@@ -57,13 +57,15 @@ class CalcIMC(BaseModel):
         return genero
 
     @validator('peso')
-    def validar_peso(cls, peso):
+    def validar_peso(cls, s_peso):
+        peso = float(s_peso)
         if peso <= 0:
             raise ValueError('O peso deve ser um número maior que 0.')
         return peso
 
     @validator('altura')
-    def validar_altura(cls, altura):
+    def validar_altura(cls, s_altura):
+        altura = float(s_altura)
         if altura <= 0:
             raise ValueError('A altura deve ser um número maior que 0.')
         return altura
